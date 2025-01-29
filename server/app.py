@@ -14,3 +14,9 @@ api = Api(app)
 
 # Import resources
 from resources import DriverResource, CircuitResource, StatResource, DriverCircuitResource
+
+# Register API routes
+api.add_resource(DriverResource, "/drivers", "/drivers/<int:id>")
+api.add_resource(CircuitResource, "/circuits", "/circuits/<int:id>")
+api.add_resource(StatResource, "/stats", "/stats/<int:id>")
+api.add_resource(DriverCircuitResource, "/driver_circuits")
