@@ -45,3 +45,8 @@ class StatResource(Resource):
             stat = Stat.query.get(id)
             return stat.to_dict() if stat else {"message": "Stat not found"}, 404
         return [stat.to_dict() for stat in Stat.query.all()], 200
+    
+# MANY-TO-MANY RELATIONSHIP (DriverCircuit)
+class DriverCircuitResource(Resource):
+    def get(self):
+        return [dc.to_dict() for dc in DriverCircuit.query.all()], 200
