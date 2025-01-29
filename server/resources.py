@@ -9,3 +9,23 @@ def validate_number(value):
         return value
     except ValueError:
         raise ValueError("Value must be a number")
+    
+# DRIVERS
+class DriverResource(Resource):
+    def get(self, id=None):
+        if id:
+            driver = Driver.query.get(id)
+            return driver.to_dict() if driver else {"message": "Driver not found"}, 404
+        return [driver.to_dict() for driver in Driver.query.all()], 200
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("name", required=True)
+        parser.add_argument("age", type=int, required=True)
+        parser.add_argument("team", required=True)
+        args = parser.parse_args()
+
+        driver = Driver(name=args["name"], age=args["age"], team=args["team"])
+        db.session.add(driver)
+        db.session.commit()
+        return driver.to_dict(), 201
