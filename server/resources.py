@@ -37,3 +37,11 @@ class CircuitResource(Resource):
             circuit = Circuit.query.get(id)
             return circuit.to_dict() if circuit else {"message": "Circuit not found"}, 404
         return [circuit.to_dict() for circuit in Circuit.query.all()], 200
+    
+# STATS
+class StatResource(Resource):
+    def get(self, id=None):
+        if id:
+            stat = Stat.query.get(id)
+            return stat.to_dict() if stat else {"message": "Stat not found"}, 404
+        return [stat.to_dict() for stat in Stat.query.all()], 200
