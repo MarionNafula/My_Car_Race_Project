@@ -21,5 +21,10 @@ api.add_resource(CircuitResource, "/circuits", "/circuits/<int:id>")
 api.add_resource(StatResource, "/stats", "/stats/<int:id>")
 api.add_resource(DriverCircuitResource, "/driver_circuits")
 
+@app.route("/")
+def home():
+    return "Welcome to the Car Race API!"
+
+
 if __name__ == "__main__":
     app.run(debug=True)
