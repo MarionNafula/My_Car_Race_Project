@@ -20,3 +20,6 @@ api.add_resource(DriverResource, "/drivers", "/drivers/<int:id>")
 api.add_resource(CircuitResource, "/circuits", "/circuits/<int:id>")
 api.add_resource(StatResource, "/stats", "/stats/<int:id>")
 api.add_resource(DriverCircuitResource, "/driver_circuits")
+
+if __name__ == "__main__":
+    app.run(debug=True)
