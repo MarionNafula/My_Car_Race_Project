@@ -1,13 +1,14 @@
-from app import db, app
-from models import Driver, Circuit, Stat
+from app import app
+from models import db, Circuit
 
 with app.app_context():
-    db.create_all()
+    print("Creating tables...")
+    db.create_all()  # Ensure tables are created
 
-    drivers = [Driver(name="Lewis Hamilton", age=36, team="Mercedes"), Driver(name="Max Verstappen", age=25, team="Red Bull")]
-    circuits = [Circuit(name="Monaco GP", location="Monaco", length=3.34), Circuit(name="Silverstone", location="UK", length=5.89)]
+    # Seeding data
+    print("Seeding circuits...")
+    monaco = Circuit(name="Monaco GP", location="Monaco", length=3.34)
 
-    db.session.add_all(drivers + circuits)
+    db.session.add(monaco)
     db.session.commit()
-
-    print("Database seeded!")
+    print("Seeding complete!")

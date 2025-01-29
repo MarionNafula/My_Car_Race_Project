@@ -2,13 +2,15 @@ from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from config import Config
+from models import db, Circuit
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///racing.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
+db.init_app(app)  
 migrate = Migrate(app, db)
+
 
 api = Api(app)
 
