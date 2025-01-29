@@ -29,3 +29,11 @@ class DriverResource(Resource):
         db.session.add(driver)
         db.session.commit()
         return driver.to_dict(), 201
+    
+# CIRCUITS
+class CircuitResource(Resource):
+    def get(self, id=None):
+        if id:
+            circuit = Circuit.query.get(id)
+            return circuit.to_dict() if circuit else {"message": "Circuit not found"}, 404
+        return [circuit.to_dict() for circuit in Circuit.query.all()], 200
