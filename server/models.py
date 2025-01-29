@@ -31,3 +31,12 @@ class DriverCircuit(db.Model, SerializerMixin):
     race_date = db.Column(db.Date, nullable=False)
 
     serialize_rules = ('-driver.stats', '-circuit.stats')
+
+class Stat(db.Model, SerializerMixin):
+    __tablename__ = 'stats'
+    id = db.Column(db.Integer, primary_key=True)
+    driver_id = db.Column(db.Integer, db.ForeignKey("drivers.id"), nullable=False)
+    circuit_id = db.Column(db.Integer, db.ForeignKey("circuits.id"), nullable=False)
+    best_lap_time = db.Column(db.Float, nullable=False)
+
+    serialize_rules = ('-driver.stats', '-circuit.stats')
