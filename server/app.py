@@ -11,3 +11,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 api = Api(app)
+
+# Import resources
+from resources import DriverResource, CircuitResource, StatResource, DriverCircuitResource
