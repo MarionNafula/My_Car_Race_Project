@@ -22,7 +22,7 @@ This is a backend API for managing car races, drivers, and circuits. It is built
 ## Installation
 
 1. Clone the repository:
-`git clone https://github.com/yourusername/car-race-api.git`
+`git clone git@github.com:MarionNafula/My_Car_Race_Project.git`
 `cd car-race-api`
 
 2. Create and activate a virtual environment:
