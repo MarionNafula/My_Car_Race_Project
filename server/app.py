@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_cors import CORS  # Optional: If you need CORS support
+import os
 
 # Initialize extensions (but don't bind them to an app yet)
 db = SQLAlchemy()
@@ -11,13 +13,32 @@ migrate = Migrate()
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
+# Models
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+
+class Driver(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    team = db.Column(db.String(100), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
+
+class Circuit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    length = db.Column(db.Float, nullable=False)
+
 def create_app():
     app = Flask(__name__)
+    CORS(app)  # Enable CORS (Optional)
 
     # Database configuration
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///racing.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv('DATABASE_URI', 'sqlite:///database.db')  # Default SQLite
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["JWT_SECRET_KEY"] = "your_secret_key"  # Change this to a secure key
+    app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY', 'your_secret_key')  # Change for production
 
     # Initialize extensions with app
     db.init_app(app)
@@ -25,24 +46,6 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
     api = Api(app)
-
-    # Models
-    class User(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        username = db.Column(db.String(80), unique=True, nullable=False)
-        password = db.Column(db.String(255), nullable=False)
-
-    class Driver(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(100), nullable=False)
-        team = db.Column(db.String(100), nullable=False)
-        age = db.Column(db.Integer, nullable=False)
-
-    class Circuit(db.Model):
-        id = db.Column(db.Integer, primary_key=True)
-        name = db.Column(db.String(100), nullable=False)
-        location = db.Column(db.String(100), nullable=False)
-        length = db.Column(db.Float, nullable=False)
 
     # Authentication Routes
     @app.route('/register', methods=['POST'])
@@ -58,7 +61,8 @@ def create_app():
             db.session.add(new_user)
             db.session.commit()
             return jsonify({"message": "User registered successfully!"}), 201
-        except:
+        except Exception as e:
+            db.session.rollback()
             return jsonify({"error": "Username already exists"}), 400
 
     @app.route('/login', methods=['POST'])
@@ -162,6 +166,8 @@ def create_app():
 
     return app
 
+# Create `app` globally for Gunicorn
+app = create_app()
+
 if __name__ == "__main__":
-    app = create_app()
     app.run(debug=True)

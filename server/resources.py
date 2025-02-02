@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 from models import db, Driver, Circuit, Stat, DriverCircuit
-from flask import jsonify
+from flask import jsonify, make_response
 
 # Helper function for data validation
 def validate_number(value):
@@ -9,14 +9,19 @@ def validate_number(value):
         return value
     except ValueError:
         raise ValueError("Value must be a number")
-    
+
 # DRIVERS
 class DriverResource(Resource):
     def get(self, id=None):
         if id:
             driver = Driver.query.get(id)
-            return driver.to_dict() if driver else {"message": "Driver not found"}, 404
-        return [driver.to_dict() for driver in Driver.query.all()], 200
+            if driver:
+                return make_response(jsonify(driver.to_dict()), 200)
+            return make_response(jsonify({"message": "Driver not found"}), 404)
+
+        drivers = Driver.query.all()
+        drivers_list = [driver.to_dict() for driver in drivers]
+        return make_response(jsonify({"drivers": drivers_list}), 200)
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -28,25 +33,4 @@ class DriverResource(Resource):
         driver = Driver(name=args["name"], age=args["age"], team=args["team"])
         db.session.add(driver)
         db.session.commit()
-        return driver.to_dict(), 201
-    
-# CIRCUITS
-class CircuitResource(Resource):
-    def get(self, id=None):
-        if id:
-            circuit = Circuit.query.get(id)
-            return circuit.to_dict() if circuit else {"message": "Circuit not found"}, 404
-        return [circuit.to_dict() for circuit in Circuit.query.all()], 200
-    
-# STATS
-class StatResource(Resource):
-    def get(self, id=None):
-        if id:
-            stat = Stat.query.get(id)
-            return stat.to_dict() if stat else {"message": "Stat not found"}, 404
-        return [stat.to_dict() for stat in Stat.query.all()], 200
-    
-# MANY-TO-MANY RELATIONSHIP (DriverCircuit)
-class DriverCircuitResource(Resource):
-    def get(self):
-        return [dc.to_dict() for dc in DriverCircuit.query.all()], 200
+        return make_response(jsonify(driver.to_dict()), 201)
