@@ -1,24 +1,24 @@
-from app import app  # Ensure this correctly imports the Flask app
-from models import db, Circuit, Driver
+from app import create_app, db
+from models import Circuit, Driver
 
-# Ensure the Flask app context is correctly set
+app = create_app()
+
 with app.app_context():
-    print("🔄 Dropping and creating tables...")
-    db.drop_all()  # Drop all tables
-    db.create_all()  # Recreate tables
+    print("Dropping all tables...")
+    db.drop_all()
+    db.create_all()
 
-    # Seeding data
-    print("🚀 Seeding circuits...")
+    # Seed data
+    print("Seeding circuits...")
     circuit1 = Circuit(name="Monaco GP", location="Monaco", length=3.34)
     circuit2 = Circuit(name="Silverstone GP", location="UK", length=5.89)
 
-    print("🏎️ Seeding drivers...")
+    print("Seeding drivers...")
     driver1 = Driver(name="Lewis Hamilton", team="Mercedes", age=38)
     driver2 = Driver(name="Max Verstappen", team="Red Bull", age=26)
 
-    # Add all to the session
+    # Commit to database
     db.session.add_all([circuit1, circuit2, driver1, driver2])
-
-    # Commit changes to database
     db.session.commit()
+
     print("✅ Seeding complete!")
