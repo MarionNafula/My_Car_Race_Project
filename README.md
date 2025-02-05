@@ -25,6 +25,10 @@ This is a backend API for managing car races, drivers, and circuits. It is built
 `git clone git@github.com:MarionNafula/My_Car_Race_Project.git`
 `cd car-race-api`
 
+2. Clone the repository:
+`git clone git@github.com:MarionNafula/My_Car_Race_Project_React.git`
+`cd car-race-app`
+
 2. Create and activate a virtual environment:
 `python3 -m venv venv`
 `source venv/bin/activate`
