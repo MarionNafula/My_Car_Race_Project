@@ -70,6 +70,9 @@ Create a .env file in the root directory and add the following:
 - PUT /circuits/<id>: Update a circuit by ID
 - DELETE /circuits/<id>: Delete a circuit by ID
 
+## Backend
+The backend site can be viewed at [https://my-car-race-project.onrender.com]
+
 
 ## License
 This project is licensed under the MIT License.
